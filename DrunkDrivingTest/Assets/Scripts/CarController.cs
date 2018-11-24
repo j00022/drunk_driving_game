@@ -4,48 +4,38 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-
-    public float turnSpeed = 60f;
+    Rigidbody2D rb_car;
+    public float turnSpeed = .45f;
     public float _Velocity = 0.0f; //Current speed
-    public float _MaxVelocity = 1.5f; //Max speed
-    public float _MaxReverse = -0.75f; //Max reverse speed
-    public float _Accelerate = 0.01f; //Accelerate more
-    public float _Decelerate = -0.005f; //Decrease speed and reverse
-    public float _Friction = 0.0001f;
+    public float _MaxVelocity = 2.75f; //Max speed
+    public float _MaxReverse = -1.5f; //Max reverse speed
 
-	// Update is called once per frame
-	void Update () {
+    // Use this for initialization
+    void Start() {
+        rb_car = GetComponent<Rigidbody2D>();
+    }
+
+    // Update is called once per frame
+    void Update () {
         Debug.Log("In Update");
-        if (Input.GetKey(KeyCode.W))    //Accelerate
-            _Velocity += _Accelerate;
-        else if (Input.GetKey(KeyCode.S))    //Decelerate
-            _Velocity += _Decelerate;
-        else {                           //Naturally return to 0 if no input
-            while (_Velocity < 0) {
-                _Velocity += _Friction;
-                if (_Velocity > 0)
-                    _Velocity = 0;
-            }
-            while (_Velocity > 0) {
-                _Velocity -= _Friction;
-                if (_Velocity < 0)
-                    _Velocity = 0;
-            }
-        }
+        _Velocity = Input.GetAxis("Vertical") * _MaxVelocity;
         if (Input.GetKey(KeyCode.A))    //Turn left
-            transform.Rotate(Vector3.forward, turnSpeed * _Velocity * Time.deltaTime);
+            transform.Rotate(Vector3.forward, turnSpeed * _Velocity);
         if (Input.GetKey(KeyCode.D))    //Turn right
-            transform.Rotate(Vector3.forward, -turnSpeed * _Velocity * Time.deltaTime);
+            transform.Rotate(Vector3.forward, -turnSpeed * _Velocity);
 
-        if (_Velocity > _MaxVelocity) //Speed limits
-            _Velocity = _MaxVelocity;
-        else if (_Velocity < _MaxReverse)
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            _MaxVelocity = 0;
+            GetComponent<Rigidbody2D>().drag = 5;
+        }
+        if (Input.GetKeyUp(KeyCode.Space)) {
+            _MaxVelocity = 2.75f;
+            GetComponent<Rigidbody2D>().drag = 3;
+        }
+
+        rb_car.AddRelativeForce(Vector2.up * _Velocity);
+
+        if (_Velocity < _MaxReverse)
             _Velocity = _MaxReverse;
-
-        transform.Translate(Vector3.up * _Velocity * Time.deltaTime); //Move the car
     }
 }
