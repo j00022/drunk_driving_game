@@ -9,6 +9,7 @@ public class CarController : MonoBehaviour {
     public float _Velocity = 0.0f; //Current speed
     public float _MaxVelocity = 2.75f; //Max speed
     public float _MaxReverse = -1.5f; //Max reverse speed
+    public Animator animator;
 
     // Use this for initialization
     void Start() {
@@ -19,6 +20,8 @@ public class CarController : MonoBehaviour {
     void Update () {
         Debug.Log("In Update");
         _Velocity = Input.GetAxis("Vertical") * _MaxVelocity;
+        animator.SetFloat("Speed", _Velocity);
+
         if (Input.GetKey(KeyCode.A))    //Turn left
             transform.Rotate(Vector3.forward, turnSpeed * _Velocity);
         if (Input.GetKey(KeyCode.D))    //Turn right
