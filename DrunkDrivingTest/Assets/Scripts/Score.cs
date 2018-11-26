@@ -16,9 +16,4 @@ public class Score : MonoBehaviour {
 	void Start () {
         _score = 100;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
