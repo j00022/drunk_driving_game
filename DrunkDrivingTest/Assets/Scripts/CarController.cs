@@ -12,7 +12,7 @@ public class CarController : MonoBehaviour {
     public float mag;
     public Animator animator;
 
-    private float direction() {
+    public float direction() {
         return Mathf.Sign(transform.InverseTransformDirection(rb_car.velocity).y); //1 if pos or zero, -1 if neg.
     }
 
